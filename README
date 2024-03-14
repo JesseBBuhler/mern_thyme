@@ -1,0 +1,36 @@
+# My Thyme website created using MERN stack
+
+## Project Goals
+
+The purpose of this project is to create a website that allows a user to upload cooking recipe blog posts and have other users read and comment on those posts.
+
+## Requirements
+
+### Login
+
+    Users will be able to log in to their accounts to identify their comments and restrict blog posting ability to the main user.
+
+### Create Recipes
+
+    The main user will be able to store recipes to the database that can be reused across blogs.
+    Recipes will include:
+    - Name
+    - Ingredients
+    - Instructions
+    - Cook time
+    - Prep time
+
+### Create blog posts
+
+    The main user will be able to create and edit blogs with the following features.
+    - Write and format text for the post
+    - Embed photos within the post
+    - Embed recipes within the post
+
+### Write comments
+
+    Other users will be able to post comments below blog posts and respond to each other's comments.
+
+### Moderate comments
+
+    The main user will be able to delete or block comments of the other users
