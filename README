@@ -2,17 +2,17 @@
 
 ## Project Goals
 
-The purpose of this project is to create a website that allows a user to upload cooking recipe blog posts and have other users read and comment on those posts.
+The purpose of this project is to create a website that allows an admin user to upload cooking recipe blog posts and have other users read and comment on those posts.
 
 ## Requirements
 
 ### Login
 
-    Users will be able to log in to their accounts to identify their comments and restrict blog posting ability to the main user.
+    Users will be able to log in to their accounts to identify their comments and restrict blog posting ability to admins.
 
 ### Create Recipes
 
-    The main user will be able to store recipes to the database that can be reused across blogs.
+    Admin users will be able to store recipes to the database that can be reused across blogs.
     Recipes will include:
     - Name
     - Ingredients
@@ -22,15 +22,72 @@ The purpose of this project is to create a website that allows a user to upload 
 
 ### Create blog posts
 
-    The main user will be able to create and edit blogs with the following features.
+    Admin users will be able to create and edit blogs with the following features.
     - Write and format text for the post
     - Embed photos within the post
     - Embed recipes within the post
 
 ### Write comments
 
-    Other users will be able to post comments below blog posts and respond to each other's comments.
+    Users will be able to post comments below blog posts and respond to each other's comments.
 
 ### Moderate comments
 
-    The main user will be able to delete or block comments of the other users
+    Admin users will be able to delete or block comments of the other users
+
+## api routes
+
+### /user
+
+#### api/user/login
+
+    log in as a user
+
+#### api/user/signup
+
+    create a new user
+
+### /recipe
+
+#### api/recipe
+
+    -get: get all recipes
+    -post: create a new recipe
+        restricted to admin
+
+#### api/recipe/:id
+
+    -get: get a specific recipe
+    -patch: edit a recipe
+        restricted to admin
+    -delete: delete a recipe
+        restricted to admin
+
+### /blog
+
+#### api/blog
+
+    -get: get json data for all blog posts
+    -post: create a new blog post
+        restricted to admin
+
+#### api/blog/:id
+
+    -get: get a specific blog post
+    -patch: edit a blog post
+        restricted to admin
+    -delete: delete a blog post
+        restricted to admin
+
+#### api/blog/:id/comment
+
+    -get: get all comments associated with a blog post
+    -post: create a new comment associated with a blog post
+
+#### api/blog/:id/comment/:id
+
+    -get: get a specific comment
+    -patch: edit a comment
+        restricted to the original creator of the comment or an admin
+    -delete:
+        restricted to the orignial creator of the comment or an admin
