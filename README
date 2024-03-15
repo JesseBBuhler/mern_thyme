@@ -39,13 +39,27 @@ The purpose of this project is to create a website that allows an admin user to 
 
 ### /user
 
+#### api/user
+
+    -get: get info for all users
+        restricted to admin
+
+#### api/user/:id
+
+    -get: get info for a specific user
+        restricted to the relevent user or an admin
+    -patch: edit info for a specific user
+        restricted to the relevent user or an admin
+    -delete: delete a user
+        restricted to the relevent user or an admin
+
 #### api/user/login
 
-    log in as a user
+    -post: log in as a user
 
 #### api/user/signup
 
-    create a new user
+    -post: create a new user
 
 ### /recipe
 
