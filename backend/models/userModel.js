@@ -36,7 +36,7 @@ const userSchema = new Schema(
 // cannot use arrow function in functions that use "this"
 userSchema.statics.signup = async function (userName, email, password) {
   //validation
-  if (!email || !password || !username) {
+  if (!email || !password || !userName) {
     throw Error("All fields must be filled");
   }
 
@@ -94,4 +94,4 @@ userSchema.statics.login = async function (userName, password) {
   return user;
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("user", userSchema);

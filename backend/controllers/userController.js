@@ -1,29 +1,102 @@
-const getUsers = (req, res) => {
-  res.send("get info for all users");
+const { isValidObjectId } = require("mongoose");
+const userModel = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+
+const getUsers = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-const getUser = (req, res) => {
-  res.send("get info for user with id " + req.params.id);
+const getUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await userModel.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: `No user found with id of ${id}` });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
-const editUser = (req, res) => {
-  res.send("edit info for user with id " + req.params.id);
+const editUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await userModel.findOneAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: `No user found with id of ${id}` });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
-const deleteUser = (req, res) => {
-  res.send("delete user with id " + req.params.id);
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await userModel.findOneAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: `No user found with id of ${id}` });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
-const signUp = (req, res) => {
-  res.send("sign up a new user");
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-const logIn = (req, res) => {
-  res.send("log in an existing user");
+const signUp = async (req, res) => {
+  const { userName, email, password } = req.body;
+  try {
+    const user = await userModel.signup(userName, email, password);
+    const token = createToken(user._id);
+    res.status(200).json({ userName: user.userName, token: token });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-const editUserAccess = (req, res) => {
-  res.send("edit user access");
+const logIn = async (req, res) => {
+  const { userName, password } = req.body;
+  try {
+    const user = userModel.login(userName, password);
+    const token = createToken(user._id);
+    res.status(200).json({ userName: userName, token: token });
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+};
+
+const editUserAccess = async (req, res) => {
+  res.send("edit user access for user with id " + req.params.id);
 };
 
 module.exports = {
