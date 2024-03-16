@@ -7,6 +7,7 @@ const {
   deleteUser,
   signUp,
   logIn,
+  editUserAccess,
 } = require("../controllers/userController");
 
 router.get("/", getUsers);
@@ -15,5 +16,6 @@ router.patch("/:id", editUser);
 router.delete("/:id", deleteUser);
 router.post("/signup", signUp);
 router.post("/login", logIn);
+router.patch("/:id/admin", editUserAccess);
 
 module.exports = router;

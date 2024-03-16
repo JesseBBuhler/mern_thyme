@@ -22,6 +22,10 @@ const logIn = (req, res) => {
   res.send("log in an existing user");
 };
 
+const editUserAccess = (req, res) => {
+  res.send("edit user access");
+};
+
 module.exports = {
   getUsers,
   getUser,
@@ -29,4 +33,5 @@ module.exports = {
   deleteUser,
   signUp,
   logIn,
+  editUserAccess,
 };

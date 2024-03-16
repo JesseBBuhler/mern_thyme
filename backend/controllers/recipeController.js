@@ -18,10 +18,15 @@ const deleteRecipe = (req, res) => {
   res.send("delete recipe with id " + req.params.id);
 };
 
+const rateRecipe = (req, res) => {
+  res.send("rate recipe with id " + req.params.id);
+};
+
 module.exports = {
   getRecipes,
   getRecipe,
   createRecipe,
   editRecipe,
   deleteRecipe,
+  rateRecipe,
 };

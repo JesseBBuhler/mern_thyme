@@ -61,6 +61,11 @@ The purpose of this project is to create a website that allows an admin user to 
     -delete: delete a user
         restricted to the relevent user or an admin
 
+#### api/user/:id/admin
+
+    -patch: edit restricted info for user
+        restricted to admin
+
 #### api/user/login
 
     -post: log in as a user
