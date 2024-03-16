@@ -29,11 +29,19 @@ The purpose of this project is to create a website that allows an admin user to 
 
 ### Write comments
 
-    Users will be able to post comments below blog posts and respond to each other's comments.
+    Logged in users will be able to post comments below blog posts and respond to each other's comments.
 
 ### Moderate comments
 
     Admin users will be able to delete or block comments of the other users
+
+### Search for blogs and recipes
+
+    Users will be able to search through blogs and recipes by title or tag
+
+### Leave rating
+
+    Logged in users will be able to leave a rating on recipes
 
 ## api routes
 
@@ -77,6 +85,11 @@ The purpose of this project is to create a website that allows an admin user to 
     -delete: delete a recipe
         restricted to admin
 
+#### api/recipe/:id/review
+
+    -post: post a review
+        restricted to loggedIn users
+
 ### /blog
 
 #### api/blog
@@ -105,3 +118,55 @@ The purpose of this project is to create a website that allows an admin user to 
         restricted to the original creator of the comment or an admin
     -delete:
         restricted to the orignial creator of the comment or an admin
+
+## Models needed
+
+### user
+
+    - id
+    - username
+    - password
+    - accessLevel // are they an admin or user
+    - email
+    - signUpDate
+    - standing // do they have any strikes against their account
+
+### recipe
+
+    - id
+    - cuisineType
+    - prepTime
+    - cookTime
+    - servings
+    - ingredients
+    - instructions
+    - title
+    - author
+    - average rating
+    - tags
+
+### blog
+
+    - id
+    - author
+    - text
+    - publishDate
+    - title
+    - coverImg
+    - tags
+
+### comment
+
+    - id
+    - post
+    - author
+    - text
+    - publishDate
+    - parentComment
+    - hidden
+
+### rating
+
+    -userID
+    -recipeID
+    -rating
