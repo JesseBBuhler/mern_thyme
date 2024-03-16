@@ -1,6 +1,6 @@
 const express = require("express");
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/", (req, res) => {
   res.send("get info for all comments on blog post with id " + req.params.id);
