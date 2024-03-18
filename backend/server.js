@@ -1,9 +1,12 @@
 //imports
 require("dotenv").config();
 const mongoose = require("mongoose");
-const userRoutes = require("./routes/user");
-const blogRoutes = require("./routes/blog");
-const recipeRoutes = require("./routes/recipe");
+// const userRoutes = require("./routes/user");
+// const blogRoutes = require("./routes/blog");
+// const recipeRoutes = require("./routes/recipe");
+const publicRoutes = require("./routes/publicRoutes");
+const privateRoutes = require("./routes/privateRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 //declare constants
 const uri = process.env.MONGO_URI;
@@ -23,9 +26,9 @@ app.use((req, res, next) => {
 });
 
 //routes
-app.use("/api/user", userRoutes);
-app.use("/api/blog", blogRoutes);
-app.use("/api/recipe", recipeRoutes);
+app.use("/api/public", publicRoutes);
+app.use("/api/private", privateRoutes);
+app.use("/api/admin", adminRoutes);
 
 //start app
 mongoose

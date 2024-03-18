@@ -96,7 +96,63 @@ const logIn = async (req, res) => {
 };
 
 const editUserAccess = async (req, res) => {
-  res.send("edit user access for user with id " + req.params.id);
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await userModel.findOneAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: `No user found with id of ${id}` });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
+const getPublicUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const user = await userModel.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: `No user found with id of ${id}` });
+    }
+
+    const publicUser = {
+      _id: user._id,
+      userName: user.userName,
+    };
+
+    res.status(200).json(publicUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
+const getPublicUsers = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    const publicUsers = users.map((user) => {
+      const publicUser = {
+        _id: user._id,
+        userName: user.userName,
+      };
+      return publicUser;
+    });
+    res.status(200).json(publicUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 module.exports = {
@@ -107,4 +163,6 @@ module.exports = {
   signUp,
   logIn,
   editUserAccess,
+  getPublicUser,
+  getPublicUsers,
 };

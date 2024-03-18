@@ -8,6 +8,8 @@ const {
   signUp,
   logIn,
   editUserAccess,
+  getPublicUsers,
+  getPublicUser,
 } = require("../controllers/userController");
 
 router.get("/", getUsers);
@@ -17,5 +19,7 @@ router.delete("/:id", deleteUser);
 router.post("/signup", signUp);
 router.post("/login", logIn);
 router.patch("/:id/admin", editUserAccess);
+router.get("/public", getPublicUsers);
+router.get("/public/:id", getPublicUser);
 
 module.exports = router;

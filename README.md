@@ -45,84 +45,113 @@ The purpose of this project is to create a website that allows an admin user to 
 
 ## api routes
 
+### /public
+
+    unrestricted endpoints
+
+#### /api/public/user
+
+    -get: public info for all users
+
+#### /api/public/user/signup
+
+    -post: sign up a new user
+
+#### /api/public/user/login
+
+    -post: login a new user
+
+#### /api/public/user/:id
+
+    -get: public info for one user
+
+#### /api/public/recipe
+
+    -get: all recipes
+
+#### /api/public/recipe/:id
+
+    -get: one recipe
+
+#### /api/public/blog
+
+    -get: all blogs
+
+#### /api/public/blog/:id
+
+    -get: one blog
+
+#### /api/public/blog/:id/comments
+
+    -get: all comments on one blog
+
+#### /api/public/blog/:id/comments/:commentid
+
+    -get: one comment on one blog
+    -patch: edit one comment on one blog
+    -delete: delete one comment on one blog
+
+### /private
+
+    restricted to a user who is logged in or an admin
+
+#### /api/private/user/:id
+
+    restricted by id
+    -get: all info for one user
+    -patch: edit user
+    -delete: delete user
+
+#### /api/private/recipe/:id
+
+    -post: rate recipe
+
+#### /api/private/blog/:id
+
+    -post: comment on a blog
+    -patch: edit comment on a blog
+        restricted by id or admin
+
+## /admin
+
 ### /user
 
-#### api/user
+#### /api/admin/user
 
-    -get: get info for all users
-        restricted to admin
+    -get: get admin info on all users
 
-#### api/user/:id
+#### /api/admin/user/:id
 
-    -get: get info for a specific user
-        restricted to the relevent user or an admin
-    -patch: edit info for a specific user
-        restricted to the relevent user or an admin
-    -delete: delete a user
-        restricted to the relevent user or an admin
-
-#### api/user/:id/admin
-
-    -patch: edit restricted info for user
-        restricted to admin
-
-#### api/user/login
-
-    -post: log in as a user
-
-#### api/user/signup
-
-    -post: create a new user
+    -get: get admin info on one user
+    -patch: edit admin info on one user
+    -delete: delete one user
 
 ### /recipe
 
-#### api/recipe
+#### /api/admin/recipe
 
-    -get: get all recipes
-    -post: create a new recipe
-        restricted to admin
+    -post: add a new recipe
 
-#### api/recipe/:id
+#### /api/admin/recipe/:id
 
-    -get: get a specific recipe
-    -patch: edit a recipe
-        restricted to admin
-    -delete: delete a recipe
-        restricted to admin
-
-#### api/recipe/:id/review
-
-    -post: post a review
-        restricted to loggedIn users
+    -patch: edit recipe
+    -delete: delete recipe
 
 ### /blog
 
-#### api/blog
+#### /api/admin/blog
 
-    -get: get json data for all blog posts
-    -post: create a new blog post
-        restricted to admin
+    -post: add a new blog
 
-#### api/blog/:id
+#### /api/admin/blog/:id
 
-    -get: get a specific blog post
-    -patch: edit a blog post
-        restricted to admin
-    -delete: delete a blog post
-        restricted to admin
+    -patch: edit blog
+    -delete: delete blog
 
-#### api/blog/:id/comment
+#### /api/admin/blog/:id/comment/:commentid
 
-    -get: get all comments associated with a blog post
-    -post: create a new comment associated with a blog post
-
-#### api/blog/:id/comment/:id
-
-    -get: get a specific comment
-    -patch: edit a comment
-        restricted to the original creator of the comment or an admin
-    -delete:
-        restricted to the orignial creator of the comment or an admin
+    -patch: edit comment flags
+    -delete: delete comment
 
 ## Models needed
 
