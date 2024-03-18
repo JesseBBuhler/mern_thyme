@@ -88,8 +88,6 @@ The purpose of this project is to create a website that allows an admin user to 
 #### /api/public/blog/:id/comments/:commentid
 
     -get: one comment on one blog
-    -patch: edit one comment on one blog
-    -delete: delete one comment on one blog
 
 ### /private
 

@@ -94,4 +94,16 @@ userSchema.statics.login = async function (userName, password) {
   return user;
 };
 
+userSchema.methods.getPublicInfo = function () {
+  return {
+    _id: this.id,
+    userName: this.userName,
+  };
+};
+
+userSchema.statics.getAllPublicInfo = async function () {
+  const users = await this.find({});
+  return users.map((user) => user.getPublicInfo());
+};
+
 module.exports = mongoose.model("user", userSchema);

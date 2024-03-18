@@ -87,7 +87,7 @@ const signUp = async (req, res) => {
 const logIn = async (req, res) => {
   const { userName, password } = req.body;
   try {
-    const user = userModel.login(userName, password);
+    const user = await userModel.login(userName, password);
     const token = createToken(user._id);
     res.status(200).json({ userName: userName, token: token });
   } catch (error) {

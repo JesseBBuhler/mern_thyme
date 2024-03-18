@@ -11,8 +11,6 @@ const {
   getBlog,
   getAllCommentsOnBlog,
   getCommentOnBlog,
-  editCommentOnBlog,
-  deleteCommentOnBlog,
 } = require("../controllers/publicController");
 
 router.get("/user", getAllPublicUsersInfo);
@@ -25,9 +23,7 @@ router.get("/recipe/:id", getRecipe);
 
 router.get("/blog", getAllBlogs);
 router.get("/blog/:id", getBlog);
-router.get("/blog/:id/comments", getAllCommentsOnBlog);
-router.get("/blog/:id/comments/:commentid", getCommentOnBlog);
-router.patch("/blog/:id/comments/:commentid", editCommentOnBlog);
-router.delete("/blog/:id/comments/:commentid", deleteCommentOnBlog);
+router.get("/blog/:id/comment", getAllCommentsOnBlog);
+router.get("/blog/:id/comment/:commentid", getCommentOnBlog);
 
 module.exports = router;
