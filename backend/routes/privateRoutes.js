@@ -8,10 +8,14 @@ const {
   commentOnBlog,
   editBlogComment,
 } = require("../controllers/privateController");
+const requireAuth = require("../middleware/requireAuth");
 
-router.get("/user/:id", getUserInfo);
-router.patch("/user/:id", editUser);
-router.delete("/user/:id", deleteUser);
+//middleware
+router.use(requireAuth);
+
+router.get("/user/", getUserInfo);
+router.patch("/user/", editUser);
+router.delete("/user/", deleteUser);
 
 router.post("/recipe/:id", rateRecipe);
 

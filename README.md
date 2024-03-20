@@ -93,7 +93,7 @@ The purpose of this project is to create a website that allows an admin user to 
 
     restricted to a user who is logged in or an admin
 
-#### /api/private/user/:id
+#### /api/private/user/
 
     restricted by id
     -get: all info for one user

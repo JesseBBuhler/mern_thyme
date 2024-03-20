@@ -14,6 +14,12 @@ const {
   editCommentFlags,
   deleteComment,
 } = require("../controllers/adminController");
+const requireAuth = require("../middleware/requireAuth");
+const requireAdmin = require("../middleware/requireAdmin");
+
+//middleware
+router.use(requireAuth);
+router.use(requireAdmin);
 
 router.get("/user", getAllUsersInfo);
 router.get("/user/:id", getUserInfo);
