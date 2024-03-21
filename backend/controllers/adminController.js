@@ -30,12 +30,49 @@ const getUserInfo = async (req, res) => {
   }
 };
 
-const editUserInfo = (req, res) => {
-  res.send("edit admin info on one user");
+const editUserInfo = async (req, res) => {
+  const { id } = req.params;
+  const { accessLevel, standing } = req.body;
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `No user with id ${id} found.` });
+  }
+
+  const updateObject = {};
+  if (accessLevel !== null && accessLevel !== undefined) {
+    updateObject.accessLevel = accessLevel;
+  }
+  if (standing !== null && standing !== undefined) {
+    updateObject.standing = standing;
+  }
+
+  const user = await userModel.findOneAndUpdate(
+    { _id: id },
+    { $set: updateObject },
+    { new: true } // This option returns the updated document
+  );
+
+  if (!user) {
+    return res.status(404).json({ error: `No user with id ${id} found.` });
+  }
+
+  res.status(200).json(user);
 };
 
-const deleteUser = (req, res) => {
-  res.send("delete one user");
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `No user with id ${id} found.` });
+  }
+
+  const user = await userModel.findOneAndDelete({ _id: id });
+
+  if (!user) {
+    return res.status(404).json({ error: `No user with id ${id} found.` });
+  }
+
+  res.status(200).json(user);
 };
 
 const addRecipe = (req, res) => {
