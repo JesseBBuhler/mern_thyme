@@ -7,6 +7,7 @@ const {
   rateRecipe,
   commentOnBlog,
   editBlogComment,
+  resetPassword,
 } = require("../controllers/privateController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -16,6 +17,7 @@ router.use(requireAuth);
 router.get("/user/", getUserInfo);
 router.patch("/user/", editUser);
 router.delete("/user/", deleteUser);
+router.patch("/user/password", resetPassword);
 
 router.post("/recipe/:id", rateRecipe);
 

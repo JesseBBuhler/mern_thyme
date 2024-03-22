@@ -94,6 +94,36 @@ userSchema.statics.login = async function (userName, password) {
   return user;
 };
 
+userSchema.methods.changePassword = async function (oldPassword, newPassword) {
+  if (!oldPassword || !newPassword) {
+    throw Error("All fields must be filled");
+  }
+
+  // Since this method is called on an instance of a user, `this` refers to the user document.
+  const user = this;
+
+  // Check if the old password is correct.
+  const match = await bcrypt.compare(oldPassword, user.password);
+  if (!match) {
+    throw Error("Old password is incorrect");
+  }
+
+  // Validate the new password's strength.
+  if (!validator.isStrongPassword(newPassword)) {
+    throw Error("New password is not strong enough");
+  }
+
+  // Hash the new password.
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(newPassword, salt);
+
+  // Update the user's password.
+  user.password = hash;
+
+  // Save the updated user document.
+  return user.save();
+};
+
 userSchema.methods.getPublicInfo = function () {
   return {
     _id: this.id,
@@ -104,6 +134,16 @@ userSchema.methods.getPublicInfo = function () {
 userSchema.statics.getAllPublicInfo = async function () {
   const users = await this.find({});
   return users.map((user) => user.getPublicInfo());
+};
+
+userSchema.methods.getPrivateInfo = function () {
+  return {
+    _id: this.id,
+    userName: this.userName,
+    email: this.email,
+    standing: this.standing,
+    createdAt: this.createdAt,
+  };
 };
 
 module.exports = mongoose.model("user", userSchema);

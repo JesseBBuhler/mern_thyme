@@ -100,6 +100,11 @@ The purpose of this project is to create a website that allows an admin user to 
     -patch: edit user
     -delete: delete user
 
+### /api/private/user/password
+
+    restricted by id
+    -patch: change password
+
 #### /api/private/recipe/:id
 
     -post: rate recipe
