@@ -11,8 +11,8 @@ function Login() {
       <div className="signin-container">
         <h1>Welcome Back to MyThyme</h1>
         <form className="signin-form" onSubmit={handleSubmit}>
-          <label htmlFor="email">Email Address</label>
-          <input type="email" id="email" name="email" required />
+          <label htmlFor="username">User Name</label>
+          <input type="text" id="username" name="username" required />
 
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" required />

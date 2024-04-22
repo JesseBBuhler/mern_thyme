@@ -156,6 +156,11 @@ footer {
   text-decoration: underline;
 }
 
+.form-description {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 768px) {
   .signin-container {
     margin: 1rem;
