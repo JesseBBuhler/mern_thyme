@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Login() {
+function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
   };
@@ -9,8 +9,11 @@ function Login() {
   return (
     <div className="signin-section">
       <div className="signin-container">
-        <h1>Welcome Back to MyThyme</h1>
+        <h1>Welcome to MyThyme</h1>
         <form className="signin-form" onSubmit={handleSubmit}>
+          <label htmlFor="email">User Name</label>
+          <input type="email" id="email" name="email" required />
+
           <label htmlFor="email">Email Address</label>
           <input type="email" id="email" name="email" required />
 
@@ -18,12 +21,12 @@ function Login() {
           <input type="password" id="password" name="password" required />
 
           <button type="submit" className="signin-button">
-            Sign In
+            Sign Up
           </button>
         </form>
         <div className="signin-help">
           <p>
-            Don't have an account? <Link to="/signup">Sign up now</Link>
+            Already have an account? <Link to="/login">Log in now</Link>
           </p>
           <p>
             <Link to="/forgot-password">Forgot Password?</Link>
@@ -34,4 +37,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;

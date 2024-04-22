@@ -17,13 +17,23 @@ function Navbar() {
             </Link>
           </li>
           <li>
-            <Link to="/login" className="nav-item">
-              Login/Signup
+            <Link to="/about" className="nav-item">
+              About
             </Link>
           </li>
           <li>
-            <Link to="/about" className="nav-item">
-              About
+            <Link to="/blog" className="nav-item">
+              Blog
+            </Link>
+          </li>
+          <li>
+            <Link to="/recipe" className="nav-item">
+              Recipe
+            </Link>
+          </li>
+          <li>
+            <Link to="/login" className="nav-item">
+              Login/Signup
             </Link>
           </li>
         </ul>
