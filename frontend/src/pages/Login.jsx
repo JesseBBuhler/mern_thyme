@@ -1,9 +1,17 @@
 import React from "react";
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 import { Link } from "react-router-dom";
 
 function Login() {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, error, isLoading } = useLogin();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    await login(userName, password);
   };
 
   return (
@@ -12,10 +20,24 @@ function Login() {
         <h1>Welcome Back to MyThyme</h1>
         <form className="signin-form" onSubmit={handleSubmit}>
           <label htmlFor="username">User Name</label>
-          <input type="text" id="username" name="username" required />
+          <input
+            type="text"
+            onChange={(e) => setUserName(e.target.value)}
+            value={userName}
+            id="username"
+            name="username"
+            required
+          />
 
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" required />
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            id="password"
+            name="password"
+            required
+          />
 
           <button type="submit" className="signin-button">
             Sign In
