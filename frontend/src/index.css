@@ -301,6 +301,46 @@ nav a {
   background-color: rgba(255, 255, 255, 0.2); /* Slight highlight on hover */
 }
 
+/*logout popup*/
+.logout {
+  position: relative;
+}
+
+.popup {
+  position: absolute;
+  z-index: 1;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3d3d3d;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.popup-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.popup span {
+  text-decoration: underline;
+}
+
+.popup span:hover {
+  color: #6c7a5a;
+}
+
+.logout-button:disabled {
+  background-color: #6c7a5a;
+}
+
 /* Responsive design adjustments */
 @media (max-width: 768px) {
   .nav-container {

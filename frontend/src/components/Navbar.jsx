@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import useAuthContext from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
+import { useState } from "react";
+import LogoutConfirmation from "./LogoutConfirmation";
 
 function Navbar() {
   const { logout } = useLogout();
   const { user } = useAuthContext();
+  let [confirmLogout, setConfirmLogout] = useState(false);
   const handleClick = () => {
-    logout();
+    setConfirmLogout(true);
   };
   return (
     <nav className="navbar">
@@ -17,6 +20,7 @@ function Navbar() {
             alt="MyThyme Logo"
           />
         </Link>
+        {user && <span>{user.userName}</span>}
         <ul className="nav-links">
           <li>
             <Link to="/" className="nav-item">
@@ -40,8 +44,21 @@ function Navbar() {
           </li>
           {user ? (
             <li>
-              <span>{user.userName}</span>
-              <button onClick={handleClick}>Log Out</button>
+              <div className="logout">
+                <button
+                  className="logout-button"
+                  onClick={handleClick}
+                  disabled={confirmLogout}
+                >
+                  Log Out
+                </button>
+                {confirmLogout && (
+                  <LogoutConfirmation
+                    logout={logout}
+                    setConfirmLogout={setConfirmLogout}
+                  ></LogoutConfirmation>
+                )}
+              </div>
             </li>
           ) : (
             <li>
