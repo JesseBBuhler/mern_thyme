@@ -1,22 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
+import useAuthContext from "../hooks/useAuthContext";
 
 function Signup() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signup, error, isLoading } = useSignup();
+  const { user } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await signup(userName, email, password);
+    setPassword("");
   };
 
   return (
     <div className="signin-section">
+      {user && <Navigate to="/" replace={true} />}
       <div className="signin-container">
         <h1>Welcome to MyThyme</h1>
         <form className="signin-form" onSubmit={handleSubmit}>

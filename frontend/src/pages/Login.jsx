@@ -1,21 +1,25 @@
 import React from "react";
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import useAuthContext from "../hooks/useAuthContext";
 
 function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const { login, error, isLoading } = useLogin();
+  const { user } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await login(userName, password);
+    setPassword("");
   };
 
   return (
     <div className="signin-section">
+      {user && <Navigate to="/" replace={true} />}
       <div className="signin-container">
         <h1>Welcome Back to MyThyme</h1>
         <form className="signin-form" onSubmit={handleSubmit}>
@@ -39,9 +43,10 @@ function Login() {
             required
           />
 
-          <button type="submit" className="signin-button">
+          <button type="submit" className="signin-button" disabled={isLoading}>
             Sign In
           </button>
+          {error && <div className="error">{error}</div>}
         </form>
         <div className="signin-help">
           <p>
