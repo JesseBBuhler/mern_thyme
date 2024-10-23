@@ -1,5 +1,6 @@
 const { isValidObjectId } = require("mongoose");
 const userModel = require("../models/userModel");
+const recipeModel = require("../models/recipeModel");
 
 const getAllUsersInfo = async (req, res) => {
   try {
@@ -75,8 +76,53 @@ const deleteUser = async (req, res) => {
   res.status(200).json(user);
 };
 
-const addRecipe = (req, res) => {
-  res.send("add a new recipe");
+const addRecipe = async (req, res) => {
+  const {
+    title,
+    instructions,
+    ingredients,
+    servings,
+    cookTime,
+    prepTime,
+    cuisineType,
+    tags,
+  } = req.body;
+
+  let emptyFields = [];
+
+  if (!title) emptyFields.push("title");
+  if (!instructions) emptyFields.push("instructions");
+  if (!ingredients) emptyFields.push("ingredients");
+  if (!servings) emptyFields.push("servings");
+  if (cookTime === null || cookTime === undefined) emptyFields.push("cookTime");
+  if (prepTime === null || prepTime === undefined) emptyFields.push("prepTime");
+  if (!cuisineType) emptyFields.push("cuisineType");
+
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please include the following fields: ", emptyFields });
+  }
+
+  // add doc to db
+  try {
+    const author = req.user._id;
+    const recipe = await recipeModel.create({
+      cuisineType,
+      prepTime,
+      cookTime,
+      servings,
+      ingredients,
+      instructions,
+      title,
+      author,
+      tags,
+    });
+
+    res.status(200).json(recipe);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 const editRecipe = (req, res) => {
