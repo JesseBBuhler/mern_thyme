@@ -76,6 +76,8 @@ const deleteUser = async (req, res) => {
   res.status(200).json(user);
 };
 
+// ----- Recipes ------------------
+
 const addRecipe = async (req, res) => {
   const {
     title,
@@ -106,7 +108,7 @@ const addRecipe = async (req, res) => {
 
   // add doc to db
   try {
-    const author = req.user._id;
+    const author = req.user;
     const recipe = await recipeModel.create({
       cuisineType,
       prepTime,
@@ -119,7 +121,7 @@ const addRecipe = async (req, res) => {
       tags,
     });
 
-    res.status(200).json(recipe);
+    res.status(200).json(recipe.getPublicInfo());
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

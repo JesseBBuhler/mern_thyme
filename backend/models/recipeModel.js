@@ -18,4 +18,34 @@ const recipeSchema = new Schema(
   { timestamps: true }
 );
 
+recipeSchema.methods.getPublicInfo = function () {
+  const blogInfo = [];
+
+  const authorInfo = this.author._id;
+
+  this.blogs.map((blog) => {
+    blogInfo.push({ _id: blog._id, title: blog.title });
+  });
+
+  return {
+    _id: this.id,
+    title: this.title,
+    cuisineType: this.cuisineType,
+    ingredients: this.ingredients,
+    instructions: this.instructions,
+    prepTime: this.prepTime,
+    cookTime: this.cookTime,
+    servings: this.servings,
+    author: authorInfo,
+    tags: this.tags,
+    blogs: blogInfo,
+  };
+};
+
+recipeSchema.statics.getAllRecipeInfo = async function () {
+  const recipes = await this.find({});
+
+  return recipes.map((recipe) => recipe.getPublicInfo());
+};
+
 module.exports = mongoose.model("recipe", recipeSchema);

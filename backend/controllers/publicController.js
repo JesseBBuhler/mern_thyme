@@ -1,5 +1,6 @@
 const { isValidObjectId } = require("mongoose");
 const userModel = require("../models/userModel");
+const recipeModel = require("../models/recipeModel");
 const jwt = require("jsonwebtoken");
 
 // user ______________________________________
@@ -59,12 +60,35 @@ const getPublicUserInfo = async (req, res) => {
 };
 
 // recipe ______________________________________
-const getAllRecipes = (req, res) => {
-  res.send("all recipes");
+const getAllRecipes = async (req, res) => {
+  try {
+    const recipes = await recipeModel.getAllRecipeInfo();
+    res.status(200).json(recipes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-const getRecipe = (req, res) => {
-  res.send("one recipe");
+const getRecipe = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid recipe ID" });
+    }
+
+    const recipe = await recipeModel.findOne({ _id: id });
+    if (!recipe) {
+      return res
+        .status(404)
+        .json({ error: `No recipe found with id of ${id}` });
+    }
+
+    res.status(200).json(recipe.getPublicInfo());
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
 // blog ______________________________________
