@@ -1,6 +1,7 @@
 const { isValidObjectId } = require("mongoose");
 const userModel = require("../models/userModel");
 const recipeModel = require("../models/recipeModel");
+const blogModel = require("../models/blogModel");
 
 const getAllUsersInfo = async (req, res) => {
   try {
@@ -135,8 +136,33 @@ const deleteRecipe = (req, res) => {
   res.send("delete recipe");
 };
 
-const addBlog = (req, res) => {
-  res.send("add a new blog");
+// ----- Blogs ------------------
+
+const addBlog = async (req, res) => {
+  const { title, text, coverImgURL, tags } = req.body;
+  let emptyFields = [];
+  if (!title) emptyFields.push("title");
+  if (!text) emptyFields.push("text");
+  if (!coverImgURL) emptyFields.push("coverImgURL");
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please include the following fields: ", emptyFields });
+  }
+  // add doc to db
+  try {
+    const author = req.user;
+    const blog = await blogModel.create({
+      title,
+      text,
+      coverImgURL,
+      author,
+      tags,
+    });
+    res.status(200).json(blog.getPublicInfo());
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 const editBlog = (req, res) => {

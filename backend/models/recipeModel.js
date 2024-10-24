@@ -19,13 +19,7 @@ const recipeSchema = new Schema(
 );
 
 recipeSchema.methods.getPublicInfo = function () {
-  const blogInfo = [];
-
   const authorInfo = this.author._id;
-
-  this.blogs.map((blog) => {
-    blogInfo.push({ _id: blog._id, title: blog.title });
-  });
 
   return {
     _id: this.id,
@@ -38,7 +32,7 @@ recipeSchema.methods.getPublicInfo = function () {
     servings: this.servings,
     author: authorInfo,
     tags: this.tags,
-    blogs: blogInfo,
+    blogs: this.blogs,
   };
 };
 
