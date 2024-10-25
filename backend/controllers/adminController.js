@@ -37,7 +37,7 @@ const editUserInfo = async (req, res) => {
   const { accessLevel, standing } = req.body;
 
   if (!isValidObjectId(id)) {
-    return res.status(404).json({ error: `No user with id ${id} found.` });
+    return res.status(404).json({ error: `${id} is not a valid user id.` });
   }
 
   const updateObject = {};
@@ -65,7 +65,7 @@ const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   if (!isValidObjectId(id)) {
-    return res.status(404).json({ error: `No user with id ${id} found.` });
+    return res.status(404).json({ error: `${id} is not a valid user id.` });
   }
 
   const user = await userModel.findOneAndDelete({ _id: id });
@@ -128,12 +128,59 @@ const addRecipe = async (req, res) => {
   }
 };
 
-const editRecipe = (req, res) => {
-  res.send("edit recipe");
+const editRecipe = async (req, res) => {
+  const { id } = req.params;
+  const updateFields = ({
+    title,
+    cuisineType,
+    ingredients,
+    instructions,
+    prepTime,
+    cookTime,
+    servings,
+    author,
+    tags,
+  } = req.body);
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `${id} is not a valid recipe id.` });
+  }
+
+  const updateObject = {};
+
+  Object.keys(updateFields).forEach((key) => {
+    if (updateFields[key] !== null && updateFields[key] !== undefined) {
+      updateObject[key] = updateFields[key];
+    }
+  });
+
+  const recipe = await recipeModel.findOneAndUpdate(
+    { _id: id },
+    { $set: updateObject },
+    { new: true } // This option returns the updated document
+  );
+
+  if (!recipe) {
+    return res.status(404).json({ error: `No recipe with id ${id} found.` });
+  }
+
+  res.status(200).json(recipe);
 };
 
-const deleteRecipe = (req, res) => {
-  res.send("delete recipe");
+const deleteRecipe = async (req, res) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `${id} is not a valid recipe id.` });
+  }
+
+  const recipe = await recipeModel.findOneAndDelete({ _id: id });
+
+  if (!recipe) {
+    return res.status(404).json({ error: `No recipe with id ${id} found.` });
+  }
+
+  res.status(200).json(recipe);
 };
 
 // ----- Blogs ------------------
@@ -165,12 +212,49 @@ const addBlog = async (req, res) => {
   }
 };
 
-const editBlog = (req, res) => {
-  res.send("edit blog");
+const editBlog = async (req, res) => {
+  const { id } = req.params;
+  const updateFields = ({ title, text, coverImgURL, author, tags } = req.body);
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `${id} is not a valid blog id.` });
+  }
+
+  const updateObject = {};
+
+  Object.keys(updateFields).forEach((key) => {
+    if (updateFields[key] !== null && updateFields[key] !== undefined) {
+      updateObject[key] = updateFields[key];
+    }
+  });
+
+  const blog = await blogModel.findOneAndUpdate(
+    { _id: id },
+    { $set: updateObject },
+    { new: true } // This option returns the updated document
+  );
+
+  if (!blog) {
+    return res.status(404).json({ error: `No blog with id ${id} found.` });
+  }
+
+  res.status(200).json(blog);
 };
 
-const deleteBlog = (req, res) => {
-  res.send("delete blog");
+const deleteBlog = async (req, res) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) {
+    return res.status(404).json({ error: `${id} is not a valid blog id.` });
+  }
+
+  const blog = await blogModel.findOneAndDelete({ _id: id });
+
+  if (!blog) {
+    return res.status(404).json({ error: `No blog with id ${id} found.` });
+  }
+
+  res.status(200).json(blog);
 };
 
 const editCommentFlags = (req, res) => {

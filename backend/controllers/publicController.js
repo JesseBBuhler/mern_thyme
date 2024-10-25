@@ -2,6 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const userModel = require("../models/userModel");
 const recipeModel = require("../models/recipeModel");
 const jwt = require("jsonwebtoken");
+const blogModel = require("../models/blogModel");
 
 // user ______________________________________
 const getAllPublicUsersInfo = async (req, res) => {
@@ -92,12 +93,33 @@ const getRecipe = async (req, res) => {
 };
 
 // blog ______________________________________
-const getAllBlogs = (req, res) => {
-  res.send("all blogs");
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await blogModel.getAllBlogInfo();
+    res.status(200).json(blogs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-const getBlog = (req, res) => {
-  res.send("one blog");
+const getBlog = async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid blog ID" });
+    }
+
+    const blog = await blogModel.findOne({ _id: id });
+    if (!blog) {
+      return res.status(404).json({ error: `No blog found with id of ${id}` });
+    }
+
+    res.status(200).json(blog.getPublicInfo());
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
 // comment ______________________________________

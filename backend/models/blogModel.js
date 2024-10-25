@@ -28,4 +28,10 @@ blogSchema.methods.getPublicInfo = function () {
   };
 };
 
+blogSchema.statics.getAllBlogInfo = async function () {
+  blogs = await this.find({});
+
+  return blogs.map((blog) => blog.getPublicInfo());
+};
+
 module.exports = mongoose.model("blog", blogSchema);
