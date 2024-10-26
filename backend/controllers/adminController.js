@@ -257,6 +257,157 @@ const deleteBlog = async (req, res) => {
   res.status(200).json(blog);
 };
 
+const addRecipeToBlog = async (req, res) => {
+  try {
+    //get blog id
+    const { id } = req.params;
+    //get recipe ids
+    const { recipesToAdd } = req.body;
+
+    //check if valid blog id
+    if (!isValidObjectId(id)) {
+      return res.status(404).json({
+        error: `${id} is not a valid blog id.`,
+      });
+    }
+
+    //check if valid recipe ids
+    const invalidIds = [];
+
+    for (let i = 0; i < recipesToAdd.length; i++) {
+      if (!isValidObjectId(recipesToAdd[i])) {
+        invalidIds.push(recipesToAdd[i]);
+      }
+    }
+
+    if (invalidIds.length > 0) {
+      return res.status(404).json({ error: `id: ${invalidIds} invalid` });
+    }
+
+    //check if recipes in database
+    const recipes = [];
+
+    for (let i = 0; i < recipesToAdd.length; i++) {
+      let recipe = await recipeModel.findById(recipesToAdd[i]);
+      if (!recipe) {
+        invalidIds.push(recipesToAdd[i]);
+      } else {
+        recipes.push(recipe);
+      }
+    }
+
+    if (invalidIds.length > 0) {
+      return res.status(404).json({ error: `id: ${invalidIds} not found` });
+    }
+
+    //check if blog in database
+    const blog = await blogModel.findById(id);
+    if (!blog) {
+      return res.status(404).json({
+        error: `blogID: ${id} not found.`,
+      });
+    }
+
+    for (let i = 0; i < recipes.length; i++) {
+      //check if recipe is already in blog
+      if (!blog.recipes.includes(recipes[i]._id)) {
+        blog.recipes.push(recipes[i]._id); //add to blog
+      }
+
+      //check if blog is already in recipe
+      if (!recipes[i].blogs.includes(id)) {
+        recipes[i].blogs.push(id); //add to recipe
+      }
+
+      //save recipe document
+      await recipes[i].save();
+    }
+
+    // save blog
+    await blog.save();
+
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const removeRecipeFromBlog = async (req, res) => {
+  try {
+    //get blog id
+    const { id } = req.params;
+    //get recipe ids
+    const { recipesToRemove } = req.body;
+
+    //check if valid blog id
+    if (!isValidObjectId(id)) {
+      return res.status(404).json({
+        error: `${id} is not a valid blog id.`,
+      });
+    }
+
+    //check if valid recipe ids
+    const invalidIds = [];
+
+    for (let i = 0; i < recipesToRemove.length; i++) {
+      if (!isValidObjectId(recipesToRemove[i])) {
+        invalidIds.push(recipesToRemove[i]);
+      }
+    }
+
+    if (invalidIds.length > 0) {
+      return res.status(404).json({ error: `id: ${invalidIds} invalid` });
+    }
+
+    //check if recipes in database
+    const recipes = [];
+
+    for (let i = 0; i < recipesToRemove.length; i++) {
+      let recipe = await recipeModel.findById(recipesToRemove[i]);
+      if (!recipe) {
+        invalidIds.push(recipesToRemove[i]);
+      } else {
+        recipes.push(recipe);
+      }
+    }
+
+    if (invalidIds.length > 0) {
+      return res.status(404).json({ error: `id: ${invalidIds} not found` });
+    }
+
+    //check if blog in database
+    const blog = await blogModel.findById(id);
+    if (!blog) {
+      return res.status(404).json({
+        error: `blogID: ${id} not found.`,
+      });
+    }
+
+    for (let i = 0; i < recipes.length; i++) {
+      //remove recipe from blog
+      blog.recipes = blog.recipes.filter(
+        (id) => id.toString() !== recipes[i]._id.toString()
+      );
+
+      // Remove blog from recipe
+      let blogID = id;
+      recipes[i].blogs = recipes[i].blogs.filter(
+        (id) => id.toString() !== blogID.toString()
+      );
+
+      //save recipe document
+      await recipes[i].save();
+    }
+
+    // save blog
+    await blog.save();
+
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const editCommentFlags = (req, res) => {
   res.send("edit comment flags");
 };
@@ -276,6 +427,8 @@ module.exports = {
   addBlog,
   editBlog,
   deleteBlog,
+  addRecipeToBlog,
+  removeRecipeFromBlog,
   editCommentFlags,
   deleteComment,
 };
