@@ -1,6 +1,21 @@
 import React from "react";
+import { useEffect } from "react";
 
 function Home() {
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const response = await fetch("/api/public/recipe");
+      const json = await response.json();
+      if (response.ok) {
+        return json;
+      } else {
+        return "request failed";
+      }
+    };
+
+    console.log(fetchRecipes());
+    alert("hi");
+  }, []);
   return (
     <div
       className="home-section"
