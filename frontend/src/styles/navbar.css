@@ -1,0 +1,121 @@
+/* Navbar styling */
+nav {
+  background-color: #587d71; /* A shade of green from the logo */
+  padding: 0.5rem 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #587d71; /* Green background from the logo */
+  padding: 0.5rem 1rem;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1200px; /* Adjust based on your preference */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo img {
+  height: 50px; /* Adjust the size of your logo as needed */
+}
+
+.nav-links {
+  display: flex;
+  list-style-type: none;
+}
+
+.nav-item {
+  padding: 0.75rem 1rem;
+  color: #fff; /* White text color */
+  transition: color 0.3s ease;
+}
+
+.nav-item:not(:last-child) {
+  border-right: 1px solid #fff; /* White dividing lines */
+}
+
+.nav-item:hover {
+  color: #a49e91; /* Color change on hover, taken from the logo */
+  background-color: rgba(255, 255, 255, 0.2); /* Slight highlight on hover */
+}
+
+/*logout popup*/
+.logout {
+  position: relative;
+}
+
+.popup {
+  position: absolute;
+  z-index: 1;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3d3d3d;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.popup-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.popup span {
+  text-decoration: underline;
+}
+
+.popup span:hover {
+  color: #6c7a5a;
+}
+
+.logout-button:disabled {
+  background-color: #6c7a5a;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+  }
+
+  .nav-logo {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+  }
+
+  .nav-item:not(:last-child) {
+    border-right: none; /* Remove dividing lines on smaller screens */
+    border-bottom: 1px solid #fff; /* Add horizontal dividing lines */
+  }
+}

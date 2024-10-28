@@ -1,0 +1,133 @@
+/*Home styling */
+.home-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* Adjust height as needed */
+  background-size: cover;
+  background-position: center;
+}
+
+.home-overlay {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.85
+  ); /* White background with opacity */
+  padding: 2rem;
+}
+
+.home-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.home-header h1 {
+  color: #587d71; /* Color from the logo */
+  margin-bottom: 0.5rem;
+}
+
+.home-header p {
+  font-size: 1.2rem;
+  color: #5a5343; /* A darker tone for text */
+}
+
+.featured-recipes,
+.gardening-tips,
+.latest-blog-posts {
+  margin-bottom: 3rem;
+}
+
+.featured-recipes h2,
+.gardening-tips h2,
+.latest-blog-posts h2 {
+  color: #5a5343;
+  margin-bottom: 1rem;
+}
+
+/*featured recipe cards*/
+
+.recipe-list {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.recipe-card {
+  background-color: #587d71;
+  border: 1px solid #8d9b76;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 30%; /* Adjust the width as needed */
+}
+
+.recipe-card ul {
+  list-style-type: none;
+}
+
+.recipe-card h4 {
+  color: white;
+}
+
+.recipe-preview {
+  background-color: #fdfbf7;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+}
+
+.recipe-preview .summary {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.recipe-preview .tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-content: last baseline;
+}
+
+.recipe-preview .tags ul {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.recipe-preview .tags li {
+  color: white;
+  background-color: #5a5343;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Content area */
+main {
+  padding: 2rem;
+  background-color: #fdfbf7; /* A very light background to contrast the darker text */
+}
+
+/* Section titles */
+h1,
+h2,
+h3 {
+  color: #5a5343; /* A darker brown for headings */
+}
+
+/* Footer styling */
+footer {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .recipe-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .recipe-card {
+    width: 80%; /* Full width on mobile */
+    margin-bottom: 1rem;
+  }
+}

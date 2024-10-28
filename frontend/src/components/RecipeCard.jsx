@@ -3,11 +3,25 @@ function RecipeCard({ recipe }) {
     <div className="recipe-card">
       <h4>{recipe.title}</h4>
       <div className="recipe-preview">
-        <p>{recipe.cuisineType}</p>
-        <p>{recipe.prepTime}</p>
-        <p>{recipe.cookTime}</p>
-        <p>{recipe.servings}</p>
-        <p>{recipe.tags}</p>
+        <div className="summary">
+          <p>
+            <span>Cuisine Type: </span>
+            <span>{recipe.cuisineType}</span>
+          </p>
+          <p>
+            Takes {Number(recipe.prepTime) + Number(recipe.cookTime)} minutes.
+          </p>
+          <p>Servings: {recipe.servings}</p>
+        </div>
+
+        <div className="tags">
+          <p>Tags:</p>
+          <ul>
+            {recipe.tags.map((tag) => {
+              return <li>{tag}</li>;
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );

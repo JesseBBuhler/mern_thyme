@@ -41,9 +41,13 @@ function Home() {
           <div className="recipe-list">
             {/* Example placeholders for recipe items */}
             {recipes &&
-              recipes?.map((recipe) => (
-                <RecipeCard key={recipe._id} recipe={recipe}></RecipeCard>
-              ))}
+              recipes
+                .filter(
+                  (recipe) => recipe.tags && recipe.tags.includes("featured")
+                )
+                .map((recipe) => (
+                  <RecipeCard key={recipe._id} recipe={recipe}></RecipeCard>
+                ))}
           </div>
         </section>
         <section className="gardening-tips">
