@@ -1,4 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useAuthContext } from "./hooks/useAuthContext";
+
+// pages
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -9,6 +17,7 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
+  const { user } = useAuthContext();
   return (
     <Router>
       <Layout>
@@ -20,6 +29,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/recipe" element={<Recipe />} />
+          <Route path="/admin" element={!user ? <></> : <Navigate to="/" />} />
         </Routes>
       </Layout>
     </Router>

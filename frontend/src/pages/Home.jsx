@@ -1,21 +1,29 @@
 import React from "react";
 import { useEffect } from "react";
+import { useRecipesContext } from "../hooks/useRecipeContext";
+
+//components
+import RecipeCard from "../components/RecipeCard";
 
 function Home() {
+  const { recipes, dispatch } = useRecipesContext();
+
   useEffect(() => {
     const fetchRecipes = async () => {
-      const response = await fetch("/api/public/recipe");
-      const json = await response.json();
-      if (response.ok) {
-        return json;
-      } else {
-        return "request failed";
+      try {
+        const response = await fetch("/api/public/recipe");
+        if (response.ok) {
+          const json = await response.json();
+          dispatch({ type: "SET_RECIPES", payload: json });
+        } else {
+          console.error("Request failed");
+        }
+      } catch (error) {
+        console.error("Fetch error", error);
       }
     };
-
-    console.log(fetchRecipes());
-    alert("hi");
-  }, []);
+    fetchRecipes();
+  }, [dispatch]);
   return (
     <div
       className="home-section"
@@ -32,9 +40,10 @@ function Home() {
           <h2>Featured Recipes</h2>
           <div className="recipe-list">
             {/* Example placeholders for recipe items */}
-            <div className="recipe">Recipe 1</div>
-            <div className="recipe">Recipe 2</div>
-            <div className="recipe">Recipe 3</div>
+            {recipes &&
+              recipes?.map((recipe) => (
+                <RecipeCard key={recipe._id} recipe={recipe}></RecipeCard>
+              ))}
           </div>
         </section>
         <section className="gardening-tips">
