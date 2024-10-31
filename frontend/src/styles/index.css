@@ -33,6 +33,7 @@ footer {
 @import "./signIn.css";
 @import "./home.css";
 @import "./navbar.css";
+@import "./recipe.css";
 
 /* Buttons and interactive elements */
 button {
