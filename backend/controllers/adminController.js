@@ -174,19 +174,95 @@ const deleteRecipe = async (req, res) => {
     return res.status(404).json({ error: `${id} is not a valid recipe id.` });
   }
 
-  const recipe = await recipeModel.findOneAndDelete({ _id: id });
+  const deletedRecipe = await recipeModel.findOneAndDelete({ _id: id });
 
-  if (!recipe) {
+  if (!deletedRecipe) {
     return res.status(404).json({ error: `No recipe with id ${id} found.` });
   }
+
+  //remove recipe from any associated blogs
+  deletedRecipe.blogs.map((blog) => {
+    blog.recipes = blog.recipes.filter(
+      (recipe) => toString(recipe._id) != deletedRecipe._id
+    );
+    blog.save();
+  });
 
   res.status(200).json(recipe);
 };
 
 // ----- Blogs ------------------
 
+const addRecipesToBlog = async (recipes, blog) => {
+  //check if valid recipe ids
+  const invalidIds = [];
+
+  for (let i = 0; i < recipes.length; i++) {
+    if (!isValidObjectId(recipes[i])) {
+      invalidIds.push(recipes[i]);
+    }
+  }
+
+  if (invalidIds.length > 0) {
+    throw new Error(`id: ${invalidIds} invalid`);
+  }
+
+  //check if recipes in database
+  const validRecipes = [];
+
+  for (let i = 0; i < recipes.length; i++) {
+    let recipe = await recipeModel.findById(recipes[i]);
+    if (!recipe) {
+      invalidIds.push(recipes[i]);
+    } else {
+      validRecipes.push(recipe);
+    }
+  }
+
+  if (invalidIds.length > 0) {
+    throw new Error(`id: ${invalidIds} not found`);
+  }
+
+  //create list of recipes to add and recipes to remove
+  const recipesToAdd = recipes.filter(
+    (recipe) => !blog.recipes.includes(recipe._id)
+  ); //items in recipes that are not in blog.recipes
+  const recipesToRemove = blog.recipes.filter(
+    (recipe) => !recipes.includes(recipe._id)
+  ); //items in blog.recipes that are not in recipes
+
+  //remove recipes to remove
+  for (let i = 0; i < recipesToRemove.length; i++) {
+    //remove recipe from blog
+    blog.recipes = blog.recipes.filter(
+      (id) => id.toString() !== recipesToRemove[i]._id.toString()
+    );
+
+    // Remove blog from recipe
+    recipesToRemove[i].blogs = recipesToRemove[i].blogs.filter(
+      (id) => id.toString() !== blog._id.toString()
+    );
+
+    //save recipe document
+    await recipesToRemove[i].save();
+  }
+
+  //add recipes to add
+  for (let i = 0; i < recipesToAdd.length; i++) {
+    blog.recipes.push(recipesToAdd[i]._id); //add recipe to blog
+
+    recipesToAdd[i].blogs.push(blog._id); //add blog to recipe
+
+    //save recipe document
+    await recipesToAdd[i].save();
+  }
+
+  // save blog
+  await blog.save();
+};
+
 const addBlog = async (req, res) => {
-  const { title, text, coverImgURL, tags } = req.body;
+  const { title, text, coverImgURL, tags, recipes } = req.body;
   let emptyFields = [];
   if (!title) emptyFields.push("title");
   if (!text) emptyFields.push("text");
@@ -206,6 +282,8 @@ const addBlog = async (req, res) => {
       author,
       tags,
     });
+
+    addRecipesToBlog(recipes, blog);
     res.status(200).json(blog.getPublicInfo());
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -213,32 +291,39 @@ const addBlog = async (req, res) => {
 };
 
 const editBlog = async (req, res) => {
-  const { id } = req.params;
-  const updateFields = ({ title, text, coverImgURL, author, tags } = req.body);
+  try {
+    const { id } = req.params;
+    const updateFields = ({ title, text, coverImgURL, author, tags, recipes } =
+      req.body);
 
-  if (!isValidObjectId(id)) {
-    return res.status(404).json({ error: `${id} is not a valid blog id.` });
-  }
-
-  const updateObject = {};
-
-  Object.keys(updateFields).forEach((key) => {
-    if (updateFields[key] !== null && updateFields[key] !== undefined) {
-      updateObject[key] = updateFields[key];
+    if (!isValidObjectId(id)) {
+      return res.status(404).json({ error: `${id} is not a valid blog id.` });
     }
-  });
 
-  const blog = await blogModel.findOneAndUpdate(
-    { _id: id },
-    { $set: updateObject },
-    { new: true } // This option returns the updated document
-  );
+    const updateObject = {};
 
-  if (!blog) {
-    return res.status(404).json({ error: `No blog with id ${id} found.` });
+    Object.keys(updateFields).forEach((key) => {
+      if (updateFields[key] !== null && updateFields[key] !== undefined) {
+        updateObject[key] = updateFields[key];
+      }
+    });
+
+    const blog = await blogModel.findOneAndUpdate(
+      { _id: id },
+      { $set: updateObject },
+      { new: true } // This option returns the updated document
+    );
+
+    if (!blog) {
+      return res.status(404).json({ error: `No blog with id ${id} found.` });
+    }
+
+    addRecipesToBlog(recipes, blog);
+
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  res.status(200).json(blog);
 };
 
 const deleteBlog = async (req, res) => {
@@ -248,164 +333,21 @@ const deleteBlog = async (req, res) => {
     return res.status(404).json({ error: `${id} is not a valid blog id.` });
   }
 
-  const blog = await blogModel.findOneAndDelete({ _id: id });
+  const deletedBlog = await blogModel.findOneAndDelete({ _id: id });
 
-  if (!blog) {
+  if (!deletedBlog) {
     return res.status(404).json({ error: `No blog with id ${id} found.` });
   }
 
-  res.status(200).json(blog);
-};
+  //remove blog from any associated recipes
+  deletedBlog.recipes.map((recipe) => {
+    recipe.blogs = recipe.blogs.filter(
+      (blog) => toString(blog._id) !== toString(deletedBlog._id)
+    );
+    recipe.save();
+  });
 
-const addRecipeToBlog = async (req, res) => {
-  try {
-    //get blog id
-    const { id } = req.params;
-    //get recipe ids
-    const { recipesToAdd } = req.body;
-
-    //check if valid blog id
-    if (!isValidObjectId(id)) {
-      return res.status(404).json({
-        error: `${id} is not a valid blog id.`,
-      });
-    }
-
-    //check if valid recipe ids
-    const invalidIds = [];
-
-    for (let i = 0; i < recipesToAdd.length; i++) {
-      if (!isValidObjectId(recipesToAdd[i])) {
-        invalidIds.push(recipesToAdd[i]);
-      }
-    }
-
-    if (invalidIds.length > 0) {
-      return res.status(404).json({ error: `id: ${invalidIds} invalid` });
-    }
-
-    //check if recipes in database
-    const recipes = [];
-
-    for (let i = 0; i < recipesToAdd.length; i++) {
-      let recipe = await recipeModel.findById(recipesToAdd[i]);
-      if (!recipe) {
-        invalidIds.push(recipesToAdd[i]);
-      } else {
-        recipes.push(recipe);
-      }
-    }
-
-    if (invalidIds.length > 0) {
-      return res.status(404).json({ error: `id: ${invalidIds} not found` });
-    }
-
-    //check if blog in database
-    const blog = await blogModel.findById(id);
-    if (!blog) {
-      return res.status(404).json({
-        error: `blogID: ${id} not found.`,
-      });
-    }
-
-    for (let i = 0; i < recipes.length; i++) {
-      //check if recipe is already in blog
-      if (!blog.recipes.includes(recipes[i]._id)) {
-        blog.recipes.push(recipes[i]._id); //add to blog
-      }
-
-      //check if blog is already in recipe
-      if (!recipes[i].blogs.includes(id)) {
-        recipes[i].blogs.push(id); //add to recipe
-      }
-
-      //save recipe document
-      await recipes[i].save();
-    }
-
-    // save blog
-    await blog.save();
-
-    res.status(200).json(blog);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const removeRecipeFromBlog = async (req, res) => {
-  try {
-    //get blog id
-    const { id } = req.params;
-    //get recipe ids
-    const { recipesToRemove } = req.body;
-
-    //check if valid blog id
-    if (!isValidObjectId(id)) {
-      return res.status(404).json({
-        error: `${id} is not a valid blog id.`,
-      });
-    }
-
-    //check if valid recipe ids
-    const invalidIds = [];
-
-    for (let i = 0; i < recipesToRemove.length; i++) {
-      if (!isValidObjectId(recipesToRemove[i])) {
-        invalidIds.push(recipesToRemove[i]);
-      }
-    }
-
-    if (invalidIds.length > 0) {
-      return res.status(404).json({ error: `id: ${invalidIds} invalid` });
-    }
-
-    //check if recipes in database
-    const recipes = [];
-
-    for (let i = 0; i < recipesToRemove.length; i++) {
-      let recipe = await recipeModel.findById(recipesToRemove[i]);
-      if (!recipe) {
-        invalidIds.push(recipesToRemove[i]);
-      } else {
-        recipes.push(recipe);
-      }
-    }
-
-    if (invalidIds.length > 0) {
-      return res.status(404).json({ error: `id: ${invalidIds} not found` });
-    }
-
-    //check if blog in database
-    const blog = await blogModel.findById(id);
-    if (!blog) {
-      return res.status(404).json({
-        error: `blogID: ${id} not found.`,
-      });
-    }
-
-    for (let i = 0; i < recipes.length; i++) {
-      //remove recipe from blog
-      blog.recipes = blog.recipes.filter(
-        (id) => id.toString() !== recipes[i]._id.toString()
-      );
-
-      // Remove blog from recipe
-      let blogID = id;
-      recipes[i].blogs = recipes[i].blogs.filter(
-        (id) => id.toString() !== blogID.toString()
-      );
-
-      //save recipe document
-      await recipes[i].save();
-    }
-
-    // save blog
-    await blog.save();
-
-    res.status(200).json(blog);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  res.status(200).json(deletedBlog);
 };
 
 const editCommentFlags = (req, res) => {
@@ -427,8 +369,6 @@ module.exports = {
   addBlog,
   editBlog,
   deleteBlog,
-  addRecipeToBlog,
-  removeRecipeFromBlog,
   editCommentFlags,
   deleteComment,
 };

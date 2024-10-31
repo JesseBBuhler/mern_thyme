@@ -11,8 +11,6 @@ const {
   addBlog,
   editBlog,
   deleteBlog,
-  addRecipeToBlog,
-  removeRecipeFromBlog,
   editCommentFlags,
   deleteComment,
 } = require("../controllers/adminController");
@@ -35,9 +33,6 @@ router.delete("/recipe/:id", deleteRecipe);
 router.post("/blog", addBlog);
 router.patch("/blog/:id", editBlog);
 router.delete("/blog/:id", deleteBlog);
-
-router.post("/blog/:id/add-recipe", addRecipeToBlog);
-router.post("/blog/:id/remove-recipe", removeRecipeFromBlog);
 
 router.patch("/blog/:id/comment/:commentid", editCommentFlags);
 router.delete("/blog/:id/comment/:commentid", deleteComment);
