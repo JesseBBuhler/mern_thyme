@@ -17,8 +17,8 @@ function RecipeCard({ recipe }) {
         <div className="tags">
           <p>Tags:</p>
           <ul>
-            {recipe.tags.map((tag) => {
-              return <li>{tag}</li>;
+            {recipe.tags.map((tag, index) => {
+              return <li key={index}>{tag}</li>;
             })}
           </ul>
         </div>

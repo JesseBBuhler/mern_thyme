@@ -9,8 +9,8 @@ function BlogCard({ blog }) {
       ></img>
       <div className="tags">
         <ul>
-          {blog.tags.map((tag) => {
-            return <li>{tag}</li>;
+          {blog.tags.map((tag, index) => {
+            return <li key={index}>{tag}</li>;
           })}
         </ul>
       </div>
