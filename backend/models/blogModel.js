@@ -7,6 +7,7 @@ const blogSchema = new Schema(
     text: { type: String, required: true },
     title: { type: String, required: true },
     coverImgURL: { type: String, required: true },
+    imgAlt: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "user", required: true }, // one to many relationship
     recipes: [{ type: Schema.Types.ObjectId, ref: "recipe" }], //many to many relationship
     tags: [{ type: String }],

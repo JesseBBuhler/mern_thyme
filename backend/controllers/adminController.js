@@ -262,11 +262,12 @@ const addRecipesToBlog = async (recipes, blog) => {
 };
 
 const addBlog = async (req, res) => {
-  const { title, text, coverImgURL, tags, recipes } = req.body;
+  const { title, text, coverImgURL, imgAlt, tags, recipes } = req.body;
   let emptyFields = [];
   if (!title) emptyFields.push("title");
   if (!text) emptyFields.push("text");
   if (!coverImgURL) emptyFields.push("coverImgURL");
+  if (!imgAlt) emptyFields.push("imgAlt");
   if (emptyFields.length > 0) {
     return res
       .status(400)
@@ -279,6 +280,7 @@ const addBlog = async (req, res) => {
       title,
       text,
       coverImgURL,
+      imgAlt,
       author,
       tags,
     });
@@ -293,8 +295,15 @@ const addBlog = async (req, res) => {
 const editBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateFields = ({ title, text, coverImgURL, author, tags, recipes } =
-      req.body);
+    const updateFields = ({
+      title,
+      text,
+      coverImgURL,
+      imgAlt,
+      author,
+      tags,
+      recipes,
+    } = req.body);
 
     if (!isValidObjectId(id)) {
       return res.status(404).json({ error: `${id} is not a valid blog id.` });
